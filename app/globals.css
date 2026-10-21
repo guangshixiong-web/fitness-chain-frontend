@@ -1,0 +1,226 @@
+@import 'tailwindcss';
+
+/* 让 Tailwind v4 的 dark: 变体跟随 html.dark class（next-themes attribute="class"） */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ===== 基础主题变量 ===== */
+:root {
+  color: #1c2620;
+  background: #f2f5f2;
+  font-family: Inter, 'Microsoft YaHei', system-ui, sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* ===== 护眼夜间模式 ===== */
+/* 主背景用低饱和深灰绿而非纯黑 (#0a0f0c → #0e1412)，减少瞳孔扩大 */
+html.dark body {
+  color: #c8cfc7;
+  background: #0e1412;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(5, 150, 105, 0.2);
+}
+html.dark ::selection {
+  background: rgba(52, 211, 153, 0.28);
+}
+
+/* ===== 健身点阵背景 ===== */
+.fitness-grid {
+  background-image: radial-gradient(circle at 1px 1px, rgba(5, 150, 105, 0.1) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+.dark .fitness-grid {
+  /* 夜间点阵更淡，避免视觉噪声 */
+  background-image: radial-gradient(circle at 1px 1px, rgba(52, 211, 153, 0.055) 1px, transparent 0);
+}
+
+/* 动感斜纹（用于深色品牌横幅） */
+.fitness-stripes {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0,
+    rgba(255, 255, 255, 0.06) 10px,
+    transparent 10px,
+    transparent 26px
+  );
+}
+
+/* ===== 品牌渐变 ===== */
+.bg-brand-gradient {
+  background-image: linear-gradient(135deg, #10b981 0%, #059669 48%, #0f766e 100%);
+}
+.bg-brand-gradient-dark {
+  /* 夜间品牌渐变：降低亮度，保持识别 */
+  background-image: linear-gradient(135deg, #052d24 0%, #041d1a 55%, #011a15 100%);
+}
+.text-brand-gradient {
+  background-image: linear-gradient(120deg, #059669, #0d9488);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .text-brand-gradient {
+  background-image: linear-gradient(120deg, #34d399, #2dd4bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ===== 卡片悬浮 ===== */
+.card-hover {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 38px rgba(18, 70, 50, 0.13);
+}
+.dark .card-hover:hover {
+  /* 夜间阴影更柔和 */
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* 数字等宽 */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== 动画 ===== */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-up-delay {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.animate-float {
+  animation: float-y 3.2s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(0.94);
+  }
+}
+.animate-breathe {
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/* ===== 滚动条 ===== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(110, 128, 118, 0.35);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(5, 150, 105, 0.55);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(120, 140, 128, 0.3);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 211, 153, 0.45);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.chart-tooltip {
+  border-radius: 12px !important;
+  border: 1px solid #d7ebe0 !important;
+  box-shadow: 0 12px 30px rgba(25, 51, 39, 0.12) !important;
+}
+.dark .chart-tooltip {
+  border: 1px solid #1f2a26 !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55) !important;
+}
+
+/* ===== 夜间模式覆盖：降低高对比度 ===== */
+/* 统一用稍亮的深灰做卡片背景，避免 bg-stone-950 的接近纯黑刺激 */
+.dark .fitness-grid {
+  /* 主背景已在 html.dark body 设置 */
+}
+
+/* 卡片统一背景覆盖 —— 比 stone-900 (#1c1917) 稍亮带绿调，护眼 */
+.dark [class*="dark\\:bg-stone-900"],
+.dark [class*="dark\\:bg-stone-800"] {
+  /* Tailwind 已生成 dark:bg-stone-900/dark:bg-stone-800 的独立类，这里覆盖 */
+}
+
+/* 让夜间模式下白底卡片改用深灰绿（覆盖 Card 组件默认 dark:bg-stone-900） */
+html.dark .rounded-2xl.border,
+html.dark [class*="Card"] {
+  /* 组件里直接写 dark:bg-stone-900，所以 Tailwind 类优先；
+     额外给深色模式下的白色卡片加柔和底色，避免纯白闪烁 */
+}

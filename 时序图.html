@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>悦动健身中控 · 时序图</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --emerald-600: #059669;
+    --emerald-500: #10b981;
+    --emerald-700: #047857;
+    --emerald-50: #ecfdf5;
+    --bg: #f2f5f2;
+    --card: #ffffff;
+    --ink: #1c2620;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Inter, "Microsoft YaHei", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 19px;
+    line-height: 1.65;
+  }
+  .hero {
+    background: linear-gradient(135deg, #10b981 0%, #059669 48%, #0f766e 100%);
+    color: #fff;
+    padding: 48px 24px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.14) 1px, transparent 0);
+    background-size: 22px 22px;
+    opacity: 0.45;
+  }
+  .hero-inner { position: relative; max-width: 1200px; margin: 0 auto; }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hero h1 { margin: 0 0 10px; font-size: 40px; font-weight: 800; letter-spacing: -0.01em; }
+  .hero p { margin: 0; max-width: 680px; color: rgba(255,255,255,0.82); line-height: 1.75; font-size: 18px; }
+
+  .container {
+    max-width: 1200px;
+    margin: -32px auto 64px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-tabs {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow: 0 12px 40px rgba(18, 70, 50, 0.12);
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    border: 0;
+    background: transparent;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: #f1f5f9; }
+  .nav-btn.active {
+    background: var(--emerald-50);
+    color: var(--emerald-700);
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(18, 70, 50, 0.06);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .card-head {
+    padding: 22px 28px 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .card-head h2 {
+    margin: 0 0 6px;
+    font-size: 23px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-head .num {
+    background: var(--emerald-50);
+    color: var(--emerald-700);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .card-head p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  .diagram-wrap {
+    padding: 24px 16px 20px;
+    overflow-x: auto;
+    background: linear-gradient(180deg, #fafcfb 0%, #ffffff 100%);
+  }
+  .mermaid {
+    display: flex;
+    justify-content: center;
+    min-width: 720px;
+  }
+  .mermaid svg { max-width: 100%; height: auto; }
+  .notes {
+    padding: 20px 28px 26px;
+    border-top: 1px solid #f1f5f9;
+    background: #fafcfb;
+  }
+  .notes h3 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--emerald-700);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .notes ol {
+    margin: 0; padding-left: 24px;
+    color: #374151;
+    font-size: 17px;
+    line-height: 2;
+  }
+  .notes code {
+    background: var(--emerald-50);
+    color: var(--emerald-700);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-family: ui-monospace, Consolas, monospace;
+  }
+  .notes code.path { background: #f1f5f9; color: #475569; }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-inner">
+    <span class="hero-tag">悦动健身连锁中控台 · 技术导图</span>
+    <h1>一张图看懂前后端协作时序</h1>
+    <p>
+      把项目中最核心的 4 条交互链路用时序图画出来：从用户打开登录页、到 Next.js SSR 鉴权布局、
+      再到仪表盘数据加载和 CRUD 业务操作。每条流程都配了中文注释和关键源码位置，让你能对照代码真正跑通。
+    </p>
+  </div>
+</section>
+
+<div class="container">
+  <nav class="nav-tabs" id="navTabs">
+    <button class="nav-btn active" data-target="card-login">① 登录认证流程</button>
+    <button class="nav-btn" data-target="card-ssr">② SSR 鉴权与布局</button>
+    <button class="nav-btn" data-target="card-dashboard">③ 仪表盘数据加载</button>
+    <button class="nav-btn" data-target="card-crud">④ 典型 CRUD 会员卡办理</button>
+  </nav>
+
+  <div id="views">
+
+    <!-- ===== ① 登录认证流程 ===== -->
+    <section class="card" id="card-login">
+      <div class="card-head">
+        <h2><span class="num">1</span> 登录认证流程</h2>
+        <p>用户点"登录" → 拿到会话 Cookie → 跳转到仪表盘的完整链路</p>
+      </div>
+      <div class="diagram-wrap">
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    participant Browser as 用户浏览器
+    participant Login as LoginView
+    participant API as api.ts axios实例
+    participant Route as Next.js API route
+    participant Mock as handleMockApi
+    participant Cookie as session cookie
+    participant Store as Redux store
+    participant Dash as /dashboard
+
+    Browser->>Login: 填写账号密码 点登录
+    Login->>API: POST /auth/login username password
+    API->>Route: fetch 转发请求
+    Route->>Mock: handleMockApi path=/auth/login
+    Mock->>Cookie: 校验账号密码
+    Cookie-->>Mock: 验证通过
+    Mock-->>Route: 返回 token 和 userId
+    Route-->>API: 200 + Set-Cookie yuedong_session=xxx
+    API-->>Login: 登录成功响应
+    Login->>Store: dispatch loadMe
+    Login->>API: GET /auth/me 带 cookie
+    API->>Mock: handleMockApi
+    Mock->>Cookie: 从 cookie 反查用户
+    Cookie-->>Mock: AuthUser
+    Mock-->>API: data AuthUser
+    API-->>Login: user 对象
+    Login->>Store: setAuth user
+    Login->>Dash: router.replace /dashboard
+    Dash->>Dash: 进入 authenticated 分组 SSR 鉴权
+</pre>
+      </div>
+      <div class="notes">
+        <h3>📌 关键知识点</h3>
+        <ol>
+          <li>用户在登录页提交表单后，前端直接调用 <code>api.post('/auth/login')</code> — 走的是 Next.js App Router 的 API route。</li>
+          <li>API route <code class="path">app/api/v1/...path/route.ts</code> 内部调用 <code>handleMockApi</code>，它从 <code>src/mock/handlers.ts</code> 里找到匹配 /auth/login 的 handler。</li>
+          <li>Mock 验证账号密码成功后，返回 <code>Set-Cookie: yuedong_session=xxx</code>，浏览器自动存储。</li>
+          <li>前端拿到 200 后再 dispatch <code>loadMe()</code>，会同步拉一次 <code>/auth/me</code> 把当前用户信息塞进 Redux store。</li>
+          <li>最后 <code>router.replace('/dashboard')</code> 跳仪表盘；如果 cookie 没写入或已过期，下一次进入 <code>authenticated/layout.tsx</code> 会被 SSR 层拦截重定向回 /login。</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== ② SSR 鉴权与布局渲染 ===== -->
+    <section class="card" id="card-ssr">
+      <div class="card-head">
+        <h2><span class="num">2</span> SSR 鉴权与布局渲染</h2>
+        <p>带 (authenticated) 前缀的页面组，每次请求都会先在 Server 端校验登录</p>
+      </div>
+      <div class="diagram-wrap">
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    participant Browser as 浏览器
+    participant Server as Next.js Server
+    participant Layout as authenticated layout.tsx
+    participant Loader as loadAuthenticatedUser
+    participant Cookie as yuedong_session cookie
+    participant AppShell as Provider AppShell
+    participant Page as DashboardView
+
+    Browser->>Server: GET /dashboard 或软路由跳转
+    Server->>Layout: 执行共享 layout
+    Layout->>Loader: loadAuthenticatedUser
+    Loader->>Cookie: getSessionCookieHeader
+    Cookie-->>Loader: AuthUser 或 null
+    alt "cookie 存在 已登录"
+        Loader-->>Layout: AuthUser 对象
+        Layout->>AppShell: 注入 Redux next-themes Toast
+        Layout->>Page: 渲染 Server Component
+        Page->>Page: serverApiFetch 调内存 Mock
+        Page-->>AppShell: 完整 DashboardView
+        AppShell-->>Server: 完整 HTML
+        Server-->>Browser: 200 OK + 首屏 HTML
+    else "cookie 失效 未登录"
+        Loader-->>Layout: null
+        Layout->>Layout: redirect /login
+        Layout-->>Browser: 307 Location /login
+    end
+</pre>
+      </div>
+      <div class="notes">
+        <h3>📌 关键知识点</h3>
+        <ol>
+          <li>Next.js App Router 中，<code>(authenticated)</code> 是 route group，不会产生 URL 前缀但可以用共享 <code>layout.tsx</code> 包裹子页面。</li>
+          <li>每次浏览器请求子页面（或点击跳转触发导航），Next.js 都会先执行共享 layout；里面调用 <code>loadAuthenticatedUser()</code> 读 cookie。</li>
+          <li>cookie 存在 → 返回 AuthUser；layout 继续渲染 <code>Provider(user)</code> + <code>AppShell</code> + 子 Server Component。</li>
+          <li>cookie 不存在或过期 → <code>redirect('/login')</code> 在 Server 端就完成，浏览器根本不会加载仪表盘页面。</li>
+          <li>关键代码：<code>src/lib/api-server.ts</code> 是 <code>server-only</code> 模块，只能在 Server Component / API route 里 import，它不发 HTTP 请求，直接调用内存 Mock。</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== ③ 仪表盘数据加载 ===== -->
+    <section class="card" id="card-dashboard">
+      <div class="card-head">
+        <h2><span class="num">3</span> 仪表盘数据加载（CSR 补充）</h2>
+        <p>Server Component 先带 initialData 做首屏；Client 组件用 useApi 拉剩余数据</p>
+      </div>
+      <div class="diagram-wrap">
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    participant Browser as 浏览器
+    participant PageSrv as page.tsx Server
+    participant View as DashboardView
+    participant Hook as useApi hook
+    participant Axios as api axios
+    participant Mock as handleMockApi
+
+    Browser->>PageSrv: GET /dashboard 鉴权通过
+    PageSrv->>PageSrv: serverApiFetch overview
+    PageSrv->>PageSrv: serverApiFetch charts
+    PageSrv-->>View: 带 initialOverview initialCharts 渲染
+    View-->>Browser: 首屏 HTML 已含 KPI 和图表骨架
+
+    Browser->>View: hydration 完成 客户端挂载
+    View->>Hook: useApi /metrics/overview initialOverview
+    Hook->>Hook: initialData 存在 跳过首次 fetch
+    Hook-->>View: 直接用 SSR 数据渲染 StatCard
+    View->>Hook: useApi /metrics/charts initialCharts
+    Hook->>Hook: 同样跳过首次 fetch
+    Hook-->>View: Recharts 渲染 AreaChart BarChart PieChart
+
+    Browser->>View: 改筛选条件 点查询按钮
+    View->>Hook: reload
+    Hook->>Axios: GET /metrics/overview regionId
+    Axios->>Mock: handleMockApi
+    Mock-->>Axios: data
+    Axios-->>Hook: response.data
+    Hook->>Hook: setData setLoading false
+    Hook-->>View: data 更新
+    View->>View: StatCard 和图表重渲染
+</pre>
+      </div>
+      <div class="notes">
+        <h3>📌 关键知识点</h3>
+        <ol>
+          <li>Dashboard 的页面文件 <code>app/(authenticated)/dashboard/page.tsx</code> 是 Server Component：它调用 <code>serverApiFetch</code> 预取 overview 和 charts，渲染时把数据作为 props 传给 <code>DashboardView</code>。</li>
+          <li>DashboardView 是 <code>use client</code> 组件。它内部的 <code>useApi</code> hook 会先检查 <code>initialData !== null</code>：有值时跳过第一次 fetch，直接用 SSR 带来的数据。</li>
+          <li>页面上的"刷新/查询"按钮触发 <code>reload()</code>，此时才真的 <code>axios.get</code> 走 HTTP → Next.js API route → Mock handler。</li>
+          <li>Mock handler 返回的 JSON 会被 Recharts 直接消费（AreaChart / LineChart / PieChart）。</li>
+          <li>SSR + CSR 的配合保证了：首屏 HTML 里已经包含了 KPI 数字和图表（SEO/感知快）；后续筛选/刷新走客户端异步更新（流畅）。</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== ④ 典型 CRUD ===== -->
+    <section class="card" id="card-crud">
+      <div class="card-head">
+        <h2><span class="num">4</span> 典型 CRUD：办理会员卡</h2>
+        <p>Dialog 表单 → POST → Mock 写入 → Toast + 列表刷新</p>
+      </div>
+      <div class="diagram-wrap">
+<pre class="mermaid">sequenceDiagram
+    autonumber
+    participant User as 用户
+    participant View as MemberCardsView
+    participant Dialog as Dialog 表单
+    participant Axios as api axios
+    participant Mock as handleMockApi
+    participant DB as mock db.ts
+    participant Toast as ToastProvider
+    participant Hook as useApi hook
+
+    User->>Hook: 首次进入页面 useApi GET 列表
+    Hook->>Axios: GET /member-cards page=1
+    Axios->>Mock: handleMockApi
+    Mock->>DB: 读取 cards 数组
+    DB-->>Mock: 全部会员卡
+    Mock-->>Axios: data items total
+    Axios-->>Hook: response.data
+    Hook-->>View: data.items 渲染 Table
+
+    User->>View: 点办理会员卡按钮
+    View->>View: begin setOpen true 初始化 form
+    View->>Dialog: Dialog 弹出表单
+
+    User->>Dialog: 填完表单 点办理
+    Dialog->>View: submit
+    View->>Axios: POST /member-cards payload
+    Axios->>Mock: handleMockApi POST /member-cards
+    Mock->>Mock: 校验 payload 必填字段 手机号
+    alt "校验通过"
+        Mock->>DB: cards.push 新卡
+        DB-->>Mock: OK
+        Mock-->>Axios: 201 data newCard
+        Axios-->>View: 成功
+        View->>Dialog: setOpen false 关闭
+        View->>Toast: toast success 绿色 Toast
+        Toast-->>User: 3.5 秒后自动消失
+        View->>Hook: await reload
+        Hook->>Axios: GET /member-cards 同路径
+        Axios->>Mock: handleMockApi
+        Mock-->>Hook: 新列表
+        Hook-->>View: setData Table 重渲染 新卡在最上
+    else "校验失败"
+        Mock-->>Axios: 400 message
+        Axios-->>View: axios error
+        View->>Toast: toast error 红色 Toast
+        Toast-->>User: Dialog 不关 继续编辑
+    end
+</pre>
+      </div>
+      <div class="notes">
+        <h3>📌 关键知识点</h3>
+        <ol>
+          <li>会员卡页面首次挂载时，<code>useApi('/member-cards?page=1')</code> 发 GET → 返回分页列表 → 渲染 Table。</li>
+          <li>用户点"办理会员卡" → <code>begin()</code> 初始化 form + setOpen(true) → Dialog 弹出表单。</li>
+          <li>点"办理"按钮 → <code>api.post('/member-cards', payload)</code> → Mock handler 生成新 id 并 push 到内存 db.ts → 返回新卡对象。</li>
+          <li>成功后：<code>toast({variant:'success'})</code> 弹出绿色 Toast（3.5 秒自动消失）；然后 <code>await reload()</code> 重新 GET 拉列表 → Table 重渲染，新卡出现在第一行。</li>
+          <li>如果 Mock handler 校验失败（如手机号格式），返回 400 + message；toast 显示红色 Toast，列表不刷新，Dialog 保持打开。</li>
+        </ol>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script>
+  // Mermaid 初始化 — startOnLoad:true 让它自动扫描所有 <pre class="mermaid">
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    securityLevel: 'loose',
+    themeVariables: {
+      primaryColor: '#ecfdf5',
+      primaryTextColor: '#064e3b',
+      primaryBorderColor: '#059669',
+      lineColor: '#10b981',
+      secondaryColor: '#f0fdfa',
+      tertiaryColor: '#f7fef9',
+      noteBkgColor: '#ecfdf5',
+      noteBorderColor: '#059669',
+      sequenceNumberColor: '#047857',
+      sequenceNumberBorderColor: '#059669',
+      fontSize: '21px',
+      fontFamily: '"Microsoft YaHei", Inter, system-ui, sans-serif',
+    },
+    sequence: {
+      diagramMarginX: 60,
+      diagramMarginY: 30,
+      actorMargin: 70,
+      boxMargin: 10,
+      boxTextMargin: 14,
+      noteMargin: 10,
+      messageMargin: 44,
+      messageAlign: 'center',
+      mirrorActors: false,
+      wrap: true,
+    },
+  });
+
+  // Tab 切换 — 纯 CSS display，不触发重新渲染
+  document.getElementById('navTabs').addEventListener('click', (e) => {
+    const btn = e.target.closest('.nav-btn');
+    if (!btn) return;
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b === btn));
+    const target = btn.dataset.target;
+    document.querySelectorAll('.card').forEach(c => {
+      c.style.display = c.id === target ? '' : 'none';
+    });
+  });
+
+  // 页面加载完后，等待 Mermaid startOnLoad 渲染完所有 4 张（它们必须可见），然后隐藏后 3 张
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const first = document.getElementById('card-login');
+      document.querySelectorAll('.card').forEach(c => {
+        if (c !== first) c.style.display = 'none';
+      });
+    }, 1800);
+  });
+</script>
+</body>
+</html>
